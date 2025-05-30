@@ -1,5 +1,6 @@
 const { Hero, HeroImage } = require('../models');
-const cloudinary = require('../utils/cloudinary');
+const cloudinary = require('cloudinary').v2;
+
 
 exports.getAllHeroes = async (req, res) => {
   try {
@@ -10,7 +11,13 @@ exports.getAllHeroes = async (req, res) => {
     const { count, rows } = await Hero.findAndCountAll({
       limit,
       offset,
-      include: [{ model: HeroImage, as: 'images',limit: 1 }],
+      include: [{
+  model: HeroImage,
+  as: 'images',
+  where: { is_main: true },
+  required: false 
+}]
+,
       order: [['createdAt', 'DESC']]
     });
 
@@ -43,7 +50,8 @@ exports.createHero = async (req, res) => {
       real_name,
       origin_description,
       superpowers,
-      catch_phrase
+      catch_phrase,
+      main_image_url
     } = req.body;
 
     const newHero = await Hero.create({
@@ -54,22 +62,47 @@ exports.createHero = async (req, res) => {
       catch_phrase
     });
 
-    if (req.files) {
-      for (const file of req.files) {
-        const result = await cloudinary.uploader.upload(file.path);
-        await HeroImage.create({
-          heroId: newHero.id,
-          imageUrl: result.secure_url,
-          publicId: result.public_id,
+    if (req.files && req.files.length > 0) {
+      const file = req.files[0];
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: 'heroes_images',
+      });
+
+      await HeroImage.create({
+        heroId: newHero.id,
+        image_url: result.secure_url,
+        public_id: result.public_id,
+        is_main: true,
+      });
+
+    } else if (main_image_url && main_image_url.trim() !== '') {
+      let finalUrl = main_image_url;
+      let publicId = null;
+
+      if (!main_image_url.includes('cloudinary.com')) {
+        const result = await cloudinary.uploader.upload(main_image_url, {
+          folder: 'heroes_images',
         });
+        finalUrl = result.secure_url;
+        publicId = result.public_id;
       }
+
+      await HeroImage.create({
+        heroId: newHero.id,
+        image_url: finalUrl,
+        public_id: publicId,
+        is_main: true,
+      });
     }
 
-    res.status(201).json(newHero);
+    res.status(201).json({ hero: newHero });
+
   } catch (error) {
+    console.error('Error creating hero:', error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 exports.updateHero = async (req, res) => {
   try {
@@ -109,6 +142,23 @@ exports.updateHero = async (req, res) => {
   }
 };
 
+// controllers/heroController.js
+exports.setMainImage = async (req, res) => {
+  try {
+    const image = await HeroImage.findByPk(req.params.imageId);
+    if (!image) return res.status(404).json({ error: 'Image not found' });
+
+    await HeroImage.update({ is_main: false }, { where: { heroId: image.heroId } });
+image.is_main = true;
+await image.save();
+
+    res.json({ message: 'Main image set' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 exports.deleteHero = async (req, res) => {
   try {
     const hero = await Hero.findByPk(req.params.id, { include: { model: HeroImage, as: 'images' } });
@@ -125,6 +175,22 @@ exports.deleteHero = async (req, res) => {
 
     await hero.destroy();
     res.json({ message: 'Hero deleted' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.deleteHeroImage = async (req, res) => {
+  try {
+    const image = await HeroImage.findByPk(req.params.imageId);
+    if (!image) return res.status(404).json({ error: 'Image not found' });
+
+    if (image.publicId) {
+      await cloudinary.uploader.destroy(image.publicId);
+    }
+
+    await image.destroy();
+    res.json({ message: 'Image deleted' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

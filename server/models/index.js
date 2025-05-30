@@ -13,19 +13,21 @@ const sequelize = new Sequelize(
   }
 );
 
+
+
 const Hero = require('./hero')(sequelize, Sequelize);
 const HeroImage = require('./heroimage')(sequelize, Sequelize);
 
 Hero.hasMany(HeroImage, {
-  foreignKey: 'id',
+  foreignKey: 'heroId',
   as: 'images',
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE'
 });
 
 HeroImage.belongsTo(Hero, {
-  foreignKey: 'id',
-  as: 'hero'
+  foreignKey: 'heroId',
+  as: 'hero',
 });
 
 const db = {
@@ -34,5 +36,8 @@ const db = {
   Hero,
   HeroImage
 };
+
+db.HeroImage = require('./heroimage')(sequelize, Sequelize.DataTypes);
+
 
 module.exports = db;

@@ -28,3 +28,5 @@ dist/
 
 # Sequelize migrations cache
 server/.sequelize-meta.json
+
+
