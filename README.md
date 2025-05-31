@@ -48,9 +48,9 @@ DB_NAME=your_db
 DB_USER=your_user
 DB_PASSWORD=your_password
 DB_HOST=localhost
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+CLOUD_NAME=your_cloud_name
+CLOUD_API_KEY=your_api_key
+CLOUD_API_SECRET=your_api_secret
 ```
 
 Then run:
