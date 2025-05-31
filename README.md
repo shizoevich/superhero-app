@@ -4,7 +4,7 @@ A full-stack web application for managing a list of superheroes, including CRUD 
 
 ## 🛠 Stack
 
-* **Frontend**: React, React Router, Tailwind CSS, Shadcn UI
+* **Frontend**: React, React Router, Chakra Ui
 * **Backend**: Node.js, Express.js, Sequelize (PostgreSQL)
 * **Database**: PostgreSQL
 * **ORM**: Sequelize
