@@ -113,7 +113,11 @@ npx sequelize db:seed:all
 
 ## 📸 UI Preview
 
-*Add screenshots here if desired*
+![image](https://github.com/user-attachments/assets/93d09fa6-3d8c-4c06-a2a3-c98c25af6e46)
+
+![image](https://github.com/user-attachments/assets/044a182d-2a87-4618-bec1-edcf8837401a)
+
+![image](https://github.com/user-attachments/assets/e03b1102-bb37-4f40-bf76-0cd1ec9538c7)
 
 ---
 
