@@ -12,7 +12,6 @@ export default function Home() {
       try {
         const response = await fetch('/api/heroes');
         const data = await response.json();
-        console.log('Response:', data);
         setHeroes(data.heroes);
       } catch (err) {
         console.error(err);
@@ -24,13 +23,13 @@ export default function Home() {
 
   return (
     <Box p={5}>
-      <Flex justify="space-between" align="center" mb={5}>
+      <Flex justify="space-between" align="center">
         <Button onClick={() => setShowModal(true)} colorScheme="teal">
           ➕ Add a hero
         </Button>
       </Flex>
 
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={5}>
+      <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={5}>
         {heroes.map(hero => (
           <HeroCard key={hero.id} hero={hero} />
         ))}

@@ -41,7 +41,7 @@ const ImageUploader = ({ onUpload }) => {
       else {
         throw new Error('Select a file or insert a link');
       }
-console.log('Uploading to:', `/api/heroes/${heroId}/images`);
+
 
       // Save to the database
       const saveRes = await fetch(`/api/heroes/${heroId}/images`, {

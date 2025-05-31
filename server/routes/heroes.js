@@ -11,7 +11,6 @@ router.post('/:id/images', async (req, res) => {
   const { image_url, isMain } = req.body;
 
   try {
-    console.log('Received image_url:', image_url);
     
     let finalImageUrl = image_url;
     let publicId = null;
@@ -22,7 +21,6 @@ router.post('/:id/images', async (req, res) => {
       });
       finalImageUrl = result.secure_url;
       publicId = result.public_id;
-      console.log('Cloudinary result:', result);
     }
 
     const newImage = await HeroImage.create({

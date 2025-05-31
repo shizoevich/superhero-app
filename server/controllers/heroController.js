@@ -5,7 +5,7 @@ const cloudinary = require('cloudinary').v2;
 exports.getAllHeroes = async (req, res) => {
   try {
     const page = +req.query.page || 1;
-    const limit = 5;
+    const limit = 50;
     const offset = (page - 1) * limit;
 
     const { count, rows } = await Hero.findAndCountAll({
@@ -98,7 +98,6 @@ exports.createHero = async (req, res) => {
     res.status(201).json({ hero: newHero });
 
   } catch (error) {
-    console.error('Error creating hero:', error);
     res.status(500).json({ error: error.message });
   }
 };

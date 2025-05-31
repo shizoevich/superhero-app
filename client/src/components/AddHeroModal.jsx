@@ -27,16 +27,6 @@ export default function AddHeroModal({ isOpen, onClose, onHeroAdded }) {
     setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  const handleImageUpload = (file) => {
-    setFormData(prev => ({ ...prev, imageFile: file, imageUrl: '' }));
-    setErrors(prev => ({ ...prev, image: '' }));
-  };
-
-  const handleImageUrlChange = (url) => {
-    setFormData(prev => ({ ...prev, imageUrl: url, imageFile: null }));
-    setErrors(prev => ({ ...prev, image: '' }));
-  };
-
   const validateForm = () => {
     const newErrors = {};
     const requiredFields = ['nickname', 'real_name', 'origin_description', 'superpowers', 'catch_phrase'];
@@ -140,20 +130,6 @@ export default function AddHeroModal({ isOpen, onClose, onHeroAdded }) {
             <FormLabel>Catch Phrase</FormLabel>
             <Input name="catch_phrase" value={formData.catch_phrase} onChange={handleChange} />
             <FormErrorMessage>{errors.catch_phrase}</FormErrorMessage>
-          </FormControl>
-
-          <FormControl mb={2} isInvalid={errors.image}>
-            <FormLabel>Main Image (optional)</FormLabel>
-            <Text fontSize="sm" color="gray.500" mb={2}>
-              You can add one image either as a file or a URL. This image will be used as the main image for the hero.
-            </Text>
-            <ImageUploader
-              imageUrl={formData.imageUrl}
-              onFileSelect={handleImageUpload}
-              onUrlChange={handleImageUrlChange}
-              single
-            />
-            <FormErrorMessage>{errors.image}</FormErrorMessage>
           </FormControl>
         </ModalBody>
 
